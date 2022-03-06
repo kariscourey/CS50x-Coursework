@@ -4,12 +4,12 @@
 int main(void)
 {
     //prompt user for x
-    int first_number = get_long("x: ");
+    long first_number = get_long("x: ");
 
     //prompt user for y
-    int second_number = get_long("y: ");
+    long second_number = get_long("y: ");
 
     //perform addition
-    int third_number = x+y;
+    long third_number = first_number+second_number;
     printf("%li", third_number);
 }
