@@ -1,5 +1,7 @@
 #include <cs50.h>
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 bool only_digits(string input);
 
@@ -21,7 +23,21 @@ int main(int argc, string argv[])
 //check if arg is int, else output "Usage: ./caesar key", return 1
 bool only_digits(string input)
 {
-    return (if (input >= 48 && input <= 57));
+    bool only_digits;
+
+    for (int i = 0, n = strlen(input); i < n; i++)
+    {
+    if (isdigit(input[i]))
+    {
+        only_digits = true;
+    }
+    else
+    {
+        only_digits = false;
+    }
+    }
+
+    return only_digits;
 }
 
 //check if arg is positive
