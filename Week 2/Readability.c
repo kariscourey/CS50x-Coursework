@@ -16,28 +16,9 @@ int main(void)
     string input = get_string("What's your text, friend?\n");
 
     //define variable for grade index
-
-    int i = 0;
-    int letters = 0;
-    int words = 1;
-    int sentences = 0;
-    int n = strlen(input);
-
-    while (i < n)
-    {
-        if ((input[i] >= 65 && input[i] <= 90) || (input[i] >= 97 && input[i] <= 122))
-        {
-            letters++;
-        }
-        else if (input[i] == 32)
-        {
-            words++;
-        }
-        else if (input[i] == 46 || input[i] == 33 || input[i] == 63)
-        {
-            sentences++;
-        }
-    }
+    int letters = count_letters(input);
+    int words = count_words(input);
+    int sentences = count_sentences(input);
 
     //determine grade index
     int index = grade_index(letters, words, sentences);
@@ -116,7 +97,7 @@ int grade_index(int letters, int words, int sentences)
 }
 
 
-//returns grade level
+//returns grade
 void grade_level(int index)
 {
     if (index < 1)
