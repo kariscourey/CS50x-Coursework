@@ -1,12 +1,28 @@
 #include <cs50.h>
 #include <stdio.h>
 
+bool only_digits(string input);
+
 int main(int argc, string argv[])
 {
+    //check if one arg (argc == 1), else output error, return 1
+    if (argc != 2)
+    {
+        printf("Usage: ./caesar key\n");
+        return 1;
+    }
 
-//check if one arg (argc == 1), else output error, return 1
+    if(!(only_digits(argv[1])))
+    {
+        return 1;
+    }
+}
 
 //check if arg is int, else output "Usage: ./caesar key", return 1
+bool only_digits(string input)
+{
+    return (if (input >= 48 && input <= 57));
+}
 
 //check if arg is positive
 
