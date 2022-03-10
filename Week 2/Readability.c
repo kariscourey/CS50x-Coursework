@@ -3,99 +3,132 @@
 #include <string.h>
 #include <math.h>
 
+//prototypes
 int count_letters(string text);
 int count_words(string text);
 int count_sentences(string text);
 int grade_index(int letters, int words, int sentences);
+void grade_level(int index);
 
 int main(void)
 {
-    string text = get_string("What's your text, friend?\n");
-    printf("Text: %s\n", text);
+    //prompt user for input
+    string input = get_string("What's your text, friend?\n");
 
-    int letters = count_letters(text);
-    int words = count_words(text);
-    int sentences = count_sentences(text);
-    int grade = grade_index(letters, words, sentences);
+    //define variable for grade index
 
-    if (grade < 1)
+    int i = 0;
+    int letters = 0;
+    int words = 1;
+    int sentences = 0;
+    int n = strlen(input);
+
+    while (i < n)
     {
-        printf("Before Grade 1");
-    }
-    else if (grade >= 16)
-    {
-        printf("Grade 16+");
-    }
-    else if (grade >= 1 and grade < 16)
-    {
-        printf("Grade %i", grade);
+        if ((input[i] >= 65 && input[i] <= 90) || (input[i] >= 97 && input[i] <= 122))
+        {
+            letters++;
+        }
+        else if (input[i] == 32)
+        {
+            words++;
+        }
+        else if (input[i] == 46 || input[i] == 33 || input[i] == 63)
+        {
+            sentences++;
+        }
     }
 
+    //determine grade index
+    int index = grade_index(letters, words, sentences);
+
+    //determine grade level
+    grade_level(index);
 }
 
+//returns count of letters
 int count_letters(string text)
 {
     int i = 0;
     int n = strlen(text);
+    int letters = 0;
 
     while (i < n)
     {
-        if (text[i] != 32)
+        //check if i is a letter
+        if ((text[i] >= 65 && text[i] <= 90) || (text[i] >= 97 && text[i] <= 122))
         {
-            i++;
+            letters++;
         }
-        else
-        {
-            continue;
-        }
+        i++;
     }
-    return i;
+    return letters;
 }
 
+//returns count of words based on spaces
 int count_words(string text)
 {
     int i = 0;
     int n = strlen(text);
+    int words = 1;
 
     while (i < n)
     {
-        if (text[i]) == 32)
+        //check if a space
+        if (text[i] == 32)
         {
-            i++;
+            words++;
         }
-        else
-        {
-            continue;
-        }
+        i++;
     }
-    return i;
+    return words;
 }
 
+//returns number of sentences based on punctuation
 int count_sentences(string text)
 {
     int i = 0;
     int n = strlen(text);
+    int sentences = 0;
 
     while (i < n)
     {
-        if (text[i] == 46 or text[i] == 44 or text[i] == 63)
+        //if puncutation (!, ., ?)
+        if (text[i] == 46 || text[i] == 33 || text[i] == 63)
         {
-            i++;
+            sentences++;
         }
-        else
-        {
-            continue;
-        }
+        i++;
     }
-    return i;
+    return sentences;
 }
 
+//returns grade index
 int grade_index(int letters, int words, int sentences)
 {
-    float L = letters / words * 100.0;
-    float S = sentences / words * 100.0;
-    
-    int index = round(0.0588*L - 0.296*S - 15.8);
+    float L = (float) letters / words * 100;
+    float S = (float) sentences / words * 100;
+
+    //coleman lieu algorithm
+    int index = round(0.0588 * L - 0.296 * S - 15.8);
 
     return index;
+}
+
+
+//returns grade level
+void grade_level(int index)
+{
+    if (index < 1)
+    {
+        printf("Before Grade 1\n");
+    }
+    else if (index >= 16)
+    {
+        printf("Grade 16+\n");
+    }
+    else if (index >= 1 && index < 16)
+    {
+        printf("Grade %i\n", index);
+    }
 }
