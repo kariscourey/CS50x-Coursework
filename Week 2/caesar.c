@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 bool only_digits(string input);
 
@@ -14,24 +15,23 @@ int main(int argc, string argv[])
         return 1;
     }
 
-    if(!(only_digits(argv[1])))
+    if(only_digits(argv[1]) == false)
     {
+        printf("Usage: ./caesar key\n");
         return 1;
     }
 }
 
-//check if arg is int, else output "Usage: ./caesar key", return 1
+//check if arg is int
 bool only_digits(string input)
 {
-    bool only_digits;
+    bool only_digits = true;
 
     for (int i = 0, n = strlen(input); i < n; i++)
     {
-    if (isdigit(input[i]))
-    {
-        only_digits = true;
-    }
-    else
+    int test = (isdigit(input[i]));
+    char test2 = input[i];
+    if ((isdigit(input[i])))
     {
         only_digits = false;
     }
