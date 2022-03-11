@@ -1,25 +1,42 @@
 #include <cs50.h>
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdbool.h>
+#include <string.h> //for strlen
+#include <ctype.h> //for isupper, islower
+#include <stdlib.h> //for atoi
 
+//prototypes
 bool only_digits(string input);
+char rotate(char input, int k);
 
 int main(int argc, string argv[])
 {
-    //check if one arg (argc == 1), else output error, return 1
-    if (argc != 2)
+    //check if one arg (argc == 1) and if int
+    if ((argc != 2) || (only_digits(argv[1]) == false))
     {
         printf("Usage: ./caesar key\n");
         return 1;
     }
 
-    if(only_digits(argv[1]) == false)
+    //convert to int
+    int k = atoi(argv[1]);
+
+    //prompt for plaintext
+    string input = get_string("plaintext: ");
+
+    //print ciphertext label
+    printf("ciphertext: ");
+
+    //rotate per caesar cipher
+    for (int i = 0, n = strlen(input); i < n; i++)
     {
-        printf("Usage: ./caesar key\n");
-        return 1;
+        //print ciphertext
+        char output = rotate(input[i], k);
+        printf("%c", output);
     }
+
+    //print newline
+    printf("\n");
+
 }
 
 //check if arg is int
@@ -29,32 +46,50 @@ bool only_digits(string input)
 
     for (int i = 0, n = strlen(input); i < n; i++)
     {
-    int test = (isdigit(input[i]));
-    char test2 = input[i];
-    if ((isdigit(input[i])))
-    {
-        only_digits = false;
+        if (!(isdigit(input[i])))
+        {
+            only_digits = false;
+        }
     }
-    }
-
     return only_digits;
 }
 
-//check if arg is positive
+//caesar cipher (ci = (pi + k) % 26)
+char rotate(char input, int k)
+{
 
-//ci = (pi + k) % 26, k = input
+    //initialize variables
+    int output;
+    int low;
+    int high;
+    bool letter = false;
 
-//for each LETTER in input, add k (maintain case)
+    //check case
+    if (isupper(input))
+    {
+        low = 65;
+        high = 90;
+        letter = true;
+    }
+    if (islower(input))
+    {
+        low = 97;
+        high = 122;
+        letter = true;
+    }
 
-    //if LETTER + k != bet 65 and 90 (uppercase) or bet 97 and 122 (lowercase)
-    //(LETTER + k) - 90 or (LETTER + k) - 122
+    //if letter (cipher letter)
+    if (letter)
+    {
+        input = input - low;
+        output = ((input + k) % 26) + low;
+    }
 
-//output "plaintext:  "
+    //if non-letter (print non-letter)
+    else
+    {
+        output = input;
+    }
 
-//prompt user for string
-
-//output "ciphertext: CIPHERTEXT"
-
-//output newline
-
-//return 0
+    return output;
+}
