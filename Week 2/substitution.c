@@ -12,7 +12,7 @@ int main(int argc, string argv[])
     //check if one arg (argc == 1) and if int
     if ((argc != 2) || (only_letters(argv[1]) == false))
     {
-        printf("Usage: ./caesar key\n");
+        printf("Usage: ./substitution key\n");
         return 1;
     }
 
