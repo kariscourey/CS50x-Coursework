@@ -1,3 +1,4 @@
+
 #include <cs50.h>
 #include <stdio.h>
 #include <string.h>
@@ -21,7 +22,7 @@ int candidate_count;
 
 // Function prototypes
 bool vote(string name);
-void print_winner(void);
+void print_winner();
 
 int main(int argc, string argv[])
 {
@@ -67,7 +68,8 @@ int main(int argc, string argv[])
 bool vote(string name)
 {
     // check for candidate name in candidates
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < candidate_count; i++)
+        //not voter_count, otherwise voter count may exceed candidate count and try to access candidate[n+x]
     {
         if (strcmp(candidates[i].name, name) == 0)
         {
@@ -76,19 +78,34 @@ bool vote(string name)
             return true;
         }
     }
+    //if false, return false
     return false;
 }
 
 // Print the winner (or winners) of the election
 void print_winner(void)
 {
-    for (int i = 0; i < MAX; i++)
+
+    int winner_votes = 0;
+
+    for (int i = 0; i < candidate_count; i++)
     {
-        if (candidates[0].votes < candidates[i].votes)
+        //get maximum votes
+        if (candidates[i].votes > winner_votes)
         {
-            candidates[0].votes = candidates[i].votes;
+            winner_votes = candidates[i].votes;
+        }
+
+    }
+
+    for (int j = 0; j < candidate_count; j++)
+    {
+        //print all candidates with # votes = maximum votes
+        if (candidates[j].votes == winner_votes)
+        {
+            printf("%s\n", candidates[j].name);
         }
     }
-    printf("%s\n",candidates[0].name);
+
     return;
 }
