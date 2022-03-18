@@ -1,0 +1,49 @@
+sort1 uses: bubble sort
+
+How do you know?: bubble sort takes significantly less time when data is sorted. when n = 10000, time to sort is significantly smaller when data is sorted.
+
+sort2 uses: merge sort
+
+How do you know?: merge sort runs in O(nlogn), thereby making its run time the smallest compared to bubble and selection sorts, which is particularly noticeable when n is large. when n = 50000, sort 2 method performs better than sort 1 and sort 3 when reversed and random.
+
+sort3 uses: selection sort
+
+How do you know?: selection sort runs in Omega(n2), so regardless of state of data, will take ~ same time. at n = 10000, sort 3 shows ~ same time regardless of reverse, random, sorted.
+
+sorted5000 sort 1 = 0.046 / 0.000 / 0.024
+sorted5000 sort 2 = 0.020 / 0.004 / 0.015
+sorted5000 sort 3 = 0.046 / 0.029 / 0.017
+
+random5000 sort 1 = 0.193 / 0.072 / 0.022
+random5000 sort 2 = 0.047 / 0.000 / 0.021
+random5000 sort 3 = 0.052 / 0.029 / 0.018
+
+reversed5000 sort 1 = 0.076 / 0.052 / 0.019
+reversed5000 sort 2 = 0.051 / 0.003 / 0.021
+reversed5000 sort 3 = 0.071 / 0.022 / 0.027
+
+
+sorted10000 sort 1 = 0.089 / 0.005 / 0.036
+sorted10000 sort 2 = 0.066 / 0.008 / 0.028
+sorted10000 sort 3 = 0.170 / 0.106 / 0.039
+
+random10000 sort 1 = 0.301 / 0.251 / 0.028
+random10000 sort 2 = 0.068 / 0.017 / 0.016
+random10000 sort 3 = 0.199 / 0.108 / 0.040
+
+reversed10000 sort 1 = 0.306 / 0.229 / 0.030
+reversed10000 sort 2 = 0.116 / 0.008 / 0.038
+reversed10000 sort 3 = 0.216 / 0.106 / 0.046
+
+sorted50000 sort 1 = 0.569 / 0.044 / 0.176
+sorted50000 sort 2 = 0.641 / 0.041 / 0.172
+sorted50000 sort 3 = 0.703 / 0.752 / 0.196
+
+random50000 sort 1 = 7.768 / 6.490 / 0.211
+random50000 sort 2 = 0.671 / 0.049 / 0.174
+random50000 sort 3 = 3.657 / 2.642 / 0.158
+
+reversed50000 sort 1 = 5.794 / 5.068 / 0.185
+reversed50000 sort 2 = 0.613 / 0.022 / 0.165
+reversed50000 sort 3 = 3.522 / 2.741 / 0.166
+
