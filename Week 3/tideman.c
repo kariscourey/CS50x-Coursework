@@ -228,6 +228,7 @@ void lock_pairs(void)
 //check for cycle
 bool cycle(int winner, int loser)
 {
+
     if (winner == loser)
     {
         return true;
@@ -235,7 +236,7 @@ bool cycle(int winner, int loser)
 
     for (int i = 0; i < candidate_count; i++)
     {
-        if (locked[loser][i] == true)
+        if (locked[i][winner])
         {
             if (cycle(i,winner))
             {
@@ -258,13 +259,13 @@ void print_winner(void)
         for (int j = 0; j < candidate_count; j++)
         {
             //if i in locked pairs (where i is the loser)
-            if (locked[i][j] == true)
+            if (locked[i][j])
             {
                 winner = false;
                 break;
             }
         }
-        if (winner == true)
+        if (winner)
         {
             //print i (winner)
             printf("%s\n", candidates[i]);
