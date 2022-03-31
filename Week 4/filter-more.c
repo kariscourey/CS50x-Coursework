@@ -242,14 +242,121 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
             BYTE *green = &image[i][j].rgbtGreen;
 
             //calculate colorGx
-            redGx = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j+1].rgbtRed + copy[i][j-1].rgbtRed * -2 + copy[i][j+1].rgbtRed * 2 + copy[i+1][j-1].rgbtRed * -1 + copy[i+1][j+1].rgbtRed;
-            greenGx = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j+1].rgbtGreen + copy[i][j-1].rgbtGreen * -2 + copy[i][j+1].rgbtGreen * 2 + copy[i+1][j-1].rgbtGreen * -1 + copy[i+1][j+1].rgbtGreen;
-            blueGx = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j+1].rgbtBlue + copy[i][j-1].rgbtBlue * -2 + copy[i][j+1].rgbtBlue * 2 + copy[i+1][j-1].rgbtBlue * -1 + copy[i+1][j+1].rgbtBlue;
+            //if on top left corner of copy
+            if (i == 0 && j == 0)
+            {
+                redGx = copy[i][j+1].rgbtRed * 2 + copy[i+1][j+1].rgbtRed;
+                greenGx = copy[i][j+1].rgbtGreen * 2 + copy[i+1][j+1].rgbtGreen;
+                blueGx = copy[i][j+1].rgbtBlue * 2 + copy[i+1][j+1].rgbtBlue;
 
-            //calculate colorGy
-            redGy = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j].rgbtRed * -2 + copy[i-1][j+1].rgbtRed * -1 + copy[i+1][j-1].rgbtRed + copy[i+1][j].rgbtRed * 2 + copy[i+1][j+1].rgbtRed;
-            greenGy = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j].rgbtGreen * -2 + copy[i-1][j+1].rgbtGreen * -1 + copy[i+1][j-1].rgbtGreen + copy[i+1][j].rgbtGreen * 2 + copy[i+1][j+1].rgbtGreen;
-            blueGy = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j].rgbtBlue * -2 + copy[i-1][j+1].rgbtBlue * -1 + copy[i+1][j-1].rgbtBlue + copy[i+1][j].rgbtBlue * 2 + copy[i+1][j+1].rgbtBlue;
+                //calculate colorGy
+                redGy = copy[i+1][j].rgbtRed * 2 + copy[i+1][j+1].rgbtRed;
+                greenGy = copy[i+1][j].rgbtGreen * 2 + copy[i+1][j+1].rgbtGreen;
+                blueGy = copy[i+1][j].rgbtBlue * 2 + copy[i+1][j+1].rgbtBlue;
+            }
+
+            //if on bottom left corner of copy
+            else if (i == height - 1 && j == 0)
+            {
+                redGx = copy[i-1][j+1].rgbtRed + copy[i][j+1].rgbtRed * 2;
+                greenGx = copy[i-1][j+1].rgbtGreen + copy[i][j+1].rgbtGreen * 2;
+                blueGx = copy[i-1][j+1].rgbtBlue + copy[i][j+1].rgbtBlue * 2;
+
+                //calculate colorGy
+                redGy = copy[i-1][j+1].rgbtRed * -1 + copy[i-1][j].rgbtRed * -2;
+                greenGy = copy[i-1][j+1].rgbtGreen * -1 + copy[i-1][j].rgbtGreen * -2;
+                blueGy = copy[i-1][j+1].rgbtBlue * -1 + copy[i-1][j].rgbtBlue * -2;
+            }
+
+            //if on top right corner of copy
+            else if (i == 0 && j == width - 1)
+            {
+                redGx = copy[i][j-1].rgbtRed * -2 + copy[i+1][j-1].rgbtRed * -1 ;
+                greenGx = copy[i][j-1].rgbtGreen * -2 + copy[i+1][j-1].rgbtGreen * -1;
+                blueGx = copy[i][j-1].rgbtBlue * -2 + copy[i+1][j-1].rgbtBlue * -1;
+
+                //calculate colorGy
+                redGy = copy[i-1][j].rgbtRed * 2 + copy[i-1][j-1].rgbtRed;
+                greenGy = copy[i-1][j].rgbtGreen * 2 + copy[i-1][j-1].rgbtGreen;
+                blueGy = copy[i-1][j].rgbtBlue * 2 + copy[i-1][j-1].rgbtBlue;
+            }
+
+            //if on bottom right corner of copy
+            else if (i == height - 1 && j == width - 1)
+            {
+                redGx = copy[i-1][j-1].rgbtRed * -1 + copy[i][j-1].rgbtRed * -2;
+                greenGx = copy[i-1][j-1].rgbtGreen * -1 + copy[i][j-1].rgbtGreen * -2;
+                blueGx = copy[i-1][j-1].rgbtBlue * -1 + copy[i][j-1].rgbtBlue * -2;
+
+                //calculate colorGy
+                redGy = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j].rgbtRed * -2;
+                greenGy = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j].rgbtGreen * -2;
+                blueGy = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j].rgbtBlue * -2;
+            }
+
+            //if on edge top edge of copy
+            else if (i == 0 && j != 0 && j != width - 1)
+            {
+                redGx = copy[i][j-1].rgbtRed * -2 + copy[i][j+1].rgbtRed * 2 + copy[i+1][j-1].rgbtRed * -1 + copy[i+1][j+1].rgbtRed;
+                greenGx = copy[i][j-1].rgbtGreen * -2 + copy[i][j+1].rgbtGreen * 2 + copy[i+1][j-1].rgbtGreen * -1 + copy[i+1][j+1].rgbtGreen;
+                blueGx = copy[i][j-1].rgbtBlue * -2 + copy[i][j+1].rgbtBlue * 2 + copy[i+1][j-1].rgbtBlue * -1 + copy[i+1][j+1].rgbtBlue;
+
+                //calculate colorGy
+                redGy = copy[i+1][j-1].rgbtRed + copy[i+1][j].rgbtRed * 2 + copy[i+1][j+1].rgbtRed;
+                greenGy = copy[i+1][j-1].rgbtGreen + copy[i+1][j].rgbtGreen * 2 + copy[i+1][j+1].rgbtGreen;
+                blueGy = copy[i+1][j-1].rgbtBlue + copy[i+1][j].rgbtBlue * 2 + copy[i+1][j+1].rgbtBlue;
+            }
+
+            //if on left ege of copy
+            else if (j == 0 && i != 0 && i != height - 1)
+            {
+                redGx = copy[i-1][j+1].rgbtRed + copy[i][j+1].rgbtRed * 2 + copy[i+1][j+1].rgbtRed;
+                greenGx = copy[i-1][j+1].rgbtGreen + copy[i][j+1].rgbtGreen * 2 + copy[i+1][j+1].rgbtGreen;
+                blueGx = copy[i-1][j+1].rgbtBlue + copy[i][j+1].rgbtBlue * 2 + copy[i+1][j+1].rgbtBlue;
+
+                //calculate colorGy
+                redGy = copy[i-1][j].rgbtRed * -2 + copy[i-1][j+1].rgbtRed * -1 + copy[i+1][j].rgbtRed * 2 + copy[i+1][j+1].rgbtRed;
+                greenGy = copy[i-1][j].rgbtGreen * -2 + copy[i-1][j+1].rgbtGreen * -1 + copy[i+1][j].rgbtGreen * 2 + copy[i+1][j+1].rgbtGreen;
+                blueGy = copy[i-1][j].rgbtBlue * -2 + copy[i-1][j+1].rgbtBlue * -1 + copy[i+1][j].rgbtBlue * 2 + copy[i+1][j+1].rgbtBlue;
+            }
+
+            //if on bottom edge of copy
+            else if (i == height - 1 && j != 0 && j != width - 1)
+            {
+                redGx = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j+1].rgbtRed + copy[i][j-1].rgbtRed * -2 + copy[i][j+1].rgbtRed * 2;
+                greenGx = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j+1].rgbtGreen + copy[i][j-1].rgbtGreen * -2 + copy[i][j+1].rgbtGreen * 2;
+                blueGx = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j+1].rgbtBlue + copy[i][j-1].rgbtBlue * -2 + copy[i][j+1].rgbtBlue * 2;
+
+                //calculate colorGy
+                redGy = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j].rgbtRed * -2 + copy[i-1][j+1].rgbtRed * -1;
+                greenGy = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j].rgbtGreen * -2 + copy[i-1][j+1].rgbtGreen * -1;
+                blueGy = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j].rgbtBlue * -2 + copy[i-1][j+1].rgbtBlue * -1;
+            }
+
+            //if on right edge of copy
+            else if (j == width - 1 && i != 0 && i != height - 1)
+            {
+                redGx = copy[i-1][j-1].rgbtRed * -1 + copy[i][j-1].rgbtRed * -2 + copy[i+1][j-1].rgbtRed * -1;
+                greenGx = copy[i-1][j-1].rgbtGreen * -1 + copy[i][j-1].rgbtGreen * -2 + copy[i+1][j-1].rgbtGreen * -1;
+                blueGx = copy[i-1][j-1].rgbtBlue * -1 + copy[i][j-1].rgbtBlue * -2 + copy[i+1][j-1].rgbtBlue * -1;
+
+                //calculate colorGy
+                redGy = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j].rgbtRed * -2 + copy[i+1][j-1].rgbtRed + copy[i+1][j].rgbtRed * 2;
+                greenGy = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j].rgbtGreen * -2 + copy[i+1][j-1].rgbtGreen + copy[i+1][j].rgbtGreen * 2;
+                blueGy = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j].rgbtBlue * -2 + copy[i+1][j-1].rgbtBlue + copy[i+1][j].rgbtBlue * 2;
+            }
+
+            else
+            {
+                redGx = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j+1].rgbtRed + copy[i][j-1].rgbtRed * -2 + copy[i][j+1].rgbtRed * 2 + copy[i+1][j-1].rgbtRed * -1 + copy[i+1][j+1].rgbtRed;
+                greenGx = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j+1].rgbtGreen + copy[i][j-1].rgbtGreen * -2 + copy[i][j+1].rgbtGreen * 2 + copy[i+1][j-1].rgbtGreen * -1 + copy[i+1][j+1].rgbtGreen;
+                blueGx = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j+1].rgbtBlue + copy[i][j-1].rgbtBlue * -2 + copy[i][j+1].rgbtBlue * 2 + copy[i+1][j-1].rgbtBlue * -1 + copy[i+1][j+1].rgbtBlue;
+
+                //calculate colorGy
+                redGy = copy[i-1][j-1].rgbtRed * -1 + copy[i-1][j].rgbtRed * -2 + copy[i-1][j+1].rgbtRed * -1 + copy[i+1][j-1].rgbtRed + copy[i+1][j].rgbtRed * 2 + copy[i+1][j+1].rgbtRed;
+                greenGy = copy[i-1][j-1].rgbtGreen * -1 + copy[i-1][j].rgbtGreen * -2 + copy[i-1][j+1].rgbtGreen * -1 + copy[i+1][j-1].rgbtGreen + copy[i+1][j].rgbtGreen * 2 + copy[i+1][j+1].rgbtGreen;
+                blueGy = copy[i-1][j-1].rgbtBlue * -1 + copy[i-1][j].rgbtBlue * -2 + copy[i-1][j+1].rgbtBlue * -1 + copy[i+1][j-1].rgbtBlue + copy[i+1][j].rgbtBlue * 2 + copy[i+1][j+1].rgbtBlue;
+            }
 
             //set red value of image
             *red = round(pow(pow(redGx,2) + pow(redGy,2),0.5));
