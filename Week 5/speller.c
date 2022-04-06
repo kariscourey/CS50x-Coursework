@@ -4,7 +4,9 @@
 #include <stdbool.h>
 #include <stdio.h> //for FILE
 #include <string.h> //for strcpy
+#include <strings.h> //for strcasecmp
 #include <stdlib.h> //for malloc
+
 
 #include "dictionary.h"
 
@@ -40,7 +42,7 @@ bool check(const char *word)
     //traverse linked list
     for (p = table[hash_index]; p != NULL; p = p->next)
     {
-        if (stcasecmp(p->word,word) == 0)
+        if (strcasecmp(p->word,word) == 0)
         {
             return true;
         }
