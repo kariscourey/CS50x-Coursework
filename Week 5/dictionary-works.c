@@ -19,7 +19,7 @@ typedef struct node
 node;
 
 // initialize buckets in hash table
-const unsigned int N = 26;
+const unsigned int N = 10000;
 
 // Hash table //global pointer array
 node *table[N];
@@ -29,6 +29,7 @@ unsigned int word_count = 0;
 
 // Returns true if word is in dictionary, else false (case-insensitive)
 bool check(const char *word)
+
 {
     // hash word
     unsigned int hash_index = hash(word);
@@ -40,7 +41,7 @@ bool check(const char *word)
     while (cursor != NULL)
     {
         //compare word in text to dictionary (cursor.word)
-        if (strcasecmp(cursor->word,word) == 0)
+        if (strcasecmp(cursor->word, word) == 0)
         {
             return true;
         }
@@ -55,8 +56,15 @@ bool check(const char *word)
 // Hashes word to a number
 unsigned int hash(const char *word)
 {
+    //initialize hash_sum
+    long hash_sum = 0;
+
     //hash function
-    return toupper(word[0]) % 26;
+    for (int i = 0; i < strlen(word); i ++)
+    {
+        hash_sum += toupper(word[i]);
+    }
+    return hash_sum % N;
 }
 
 // Loads dictionary into memory, returning true if successful, else false
@@ -142,15 +150,20 @@ bool unload(void)
         while (cursor != NULL)
         {
             //initialize tmp
-            node *tmp = cursor->next;
+            node *tmp = cursor;
+
+            //set cursor to next node
+            cursor = cursor->next;
 
             //free cursor
-            free(cursor);
-
-            //set cursor to tmp
-            cursor = tmp;
+            free(tmp);
         }
-        return true;
+
+        //check if contents of cursor are null and on last item
+        if (cursor == NULL && i == N - 1)
+        {
+            return true;
+        }
     }
     return false;
 }
