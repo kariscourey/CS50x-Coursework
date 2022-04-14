@@ -1,6 +1,3 @@
-from sys import exit
-
-
 class RangeError(Exception):
     # define error if value out of range
     pass
