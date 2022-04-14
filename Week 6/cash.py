@@ -18,25 +18,12 @@ def get_coins(change):
     # initialize coins
     coins = 0
 
-    # calculate quarters
-    quarters = int(change / 0.25)
-    change = change % 0.25
-    coins += quarters
-
-    # calculate dimes
-    dimes = int(change / 0.10)
-    change = change % 0.10
-    coins += dimes
-
-    # calculate nickels
-    nickels = int(change / 0.05)
-    change = change % 0.05
-    coins += nickels
-
-    # calculate pennies
-    pennies = int(change / 0.01)
-    change = change % 0.01
-    coins += pennies
+    for i in [0.25, 0.10, 0.05, 0.01]:
+        # calculate coins
+        if change >= i:
+            remainder = round(change % i, 2)
+            coins += round((change - remainder) / i)
+            change = remainder
 
     return coins
 
