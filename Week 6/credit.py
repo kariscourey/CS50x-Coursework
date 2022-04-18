@@ -25,10 +25,35 @@ def main():
 
 
 def get_luhn(cardnumber):
-    # validate card number
-    for int(i) in str(cardnumber):
 
-    return True
+    # type to string
+    cardnumber = str(cardnumber)
+
+    # get length
+    length = len(cardnumber)
+
+    # initialize sum
+    sum = 0
+
+    # initialize everyother digit
+    everyother = False
+
+    for i in range(length - 1, 0, -1):
+        d = int(cardnumber[i])
+
+        # multiply if every other digit
+        if everyother == True:
+            d = d * 2
+
+        # add to sum
+        sum += d // 10
+        sum += d % 10
+
+    # evaluate mod
+    if sum % 10 == 0:
+        return True
+    else:
+        return False
 
 
 def get_cardtype(cardnumber):
