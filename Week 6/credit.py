@@ -1,5 +1,6 @@
 from sys import exit
 
+
 class RangeError(Exception):
     # define error if value out of range
     pass
@@ -10,6 +11,7 @@ def main():
     cardnumber = get_cardnumber()
 
     if get_luhn(cardnumber):
+
         # call get_cardtype
         get_cardtype(cardnumber)
 
@@ -21,7 +23,6 @@ def main():
 
     # exit error
     exit(1)
-
 
 
 def get_luhn(cardnumber):
@@ -38,20 +39,24 @@ def get_luhn(cardnumber):
     # initialize everyother digit
     everyother = False
 
-    for i in range(length - 1, 0, -1):
-        d = int(cardnumber[i])
+    for i in range(length - 1, -1, -1):
+        digit = int(cardnumber[i])
 
         # multiply if every other digit
         if everyother == True:
-            d = d * 2
+            digit = digit * 2
 
         # add to sum
-        sum += d // 10
-        sum += d % 10
+        sum += digit // 10
+        sum += digit % 10
+
+        # set everyother
+        everyother = not everyother
 
     # evaluate mod
     if sum % 10 == 0:
         return True
+
     else:
         return False
 
