@@ -13,33 +13,47 @@ def main():
     with open(argv[1], "r") as file:
 
         # read db into variable
-        db_reader = csv.reader(file)
+        db_reader = csv.DictReader(file)
 
-        # read headers
-        next(db_reader)
+        # skip headers
+        next(reader)
+
+        for row in db_reader:
+            db_reader.fieldnames(row) = row[db_reader.fieldname]
 
         # initialize subsequences
-        subsequences = []
-
-        # populate subsequences
-        for row in db_reader:
-            subsequences.append(row)
+        subsequences = db_reader.fieldnames
 
     # Read DNA sequence file into a variable
     with open(argv[2], "r") as file:
+
+        # read sequence into variable
         seq_reader = csv.reader(file)
 
+    # initialize str_count
+    str_count = {}
+
     # Find longest match of each STR in DNA sequence
-    longest_match = longest_match(seq_reader)
+    for i in subsequences:
+
+        # get longest match for each str
+        long_match = longest_match(seq_reader, subsequences[i])
+
+        # populate str_count
+        str_count[subsequences[i]] = long_match
 
     # Check database for matching profiles
+    for row in db_reader:
+        pass
 
     exit(0)
+
 
 def get_usage(arg):
     if len(arg) == 3:
         return True
     return False
+
 
 def longest_match(sequence, subsequence):
     """Returns length of longest run of subsequence in sequence."""
