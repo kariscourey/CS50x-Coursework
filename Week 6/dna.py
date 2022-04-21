@@ -25,34 +25,35 @@ def main():
         for row in db_reader:
             db_data.append(row)
 
-
     # Read DNA sequence file into a variable
-    with open(argv[2], "r") as file:
+    with open(argv[2], "rt") as file:
 
         # read sequence into variable
-        seq_reader = csv.reader(file)
-
-        # extract data
-        for row in seq_reader:
-            seq_data = row
+        seq_data = file.read()
 
     # initialize str_count
     str_count = {}
 
     # Find longest match of each STR in DNA sequence
-    for i in subsequences:
+    for i in subsequences[1:]:
 
-        # # get longest match for each str
-        # long_match = longest_match(seq_data, db_data[j])
+        # get longest match for each str
+        long_match = longest_match(seq_data, i)
 
         # populate str_count
-        str_count[subsequences[i]] = 2 #long_match
+        str_count[i] = long_match
 
     # Check database for matching profiles
-    for row in db_reader:
-        pass
 
-    exit(0)
+    # for dictionaries in db_data
+    for db_dict in db_data:
+
+        # check if str_count is in dict
+        if str_count.items() < db_dict.items():
+            print(db_dict[0].keys())
+            exit(0)
+
+    exit(1)
 
 
 def get_usage(arg):
