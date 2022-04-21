@@ -15,14 +15,16 @@ def main():
         # read db into variable
         db_reader = csv.DictReader(file)
 
-        # skip headers
-        next(reader)
-
-        for row in db_reader:
-            db_reader.fieldnames(row) = row[db_reader.fieldname]
-
         # initialize subsequences
         subsequences = db_reader.fieldnames
+
+        # initialize variable
+        db_data = []
+
+        # extract data
+        for row in db_reader:
+            db_data.append(row)
+
 
     # Read DNA sequence file into a variable
     with open(argv[2], "r") as file:
@@ -30,17 +32,21 @@ def main():
         # read sequence into variable
         seq_reader = csv.reader(file)
 
+        # extract data
+        for row in seq_reader:
+            seq_data = row
+
     # initialize str_count
     str_count = {}
 
     # Find longest match of each STR in DNA sequence
     for i in subsequences:
 
-        # get longest match for each str
-        long_match = longest_match(seq_reader, subsequences[i])
+        # # get longest match for each str
+        # long_match = longest_match(seq_data, db_data[j])
 
         # populate str_count
-        str_count[subsequences[i]] = long_match
+        str_count[subsequences[i]] = 2 #long_match
 
     # Check database for matching profiles
     for row in db_reader:
