@@ -38,6 +38,7 @@ def main():
     # initialize M
     M = N
 
+    # could have also done for i in range(M)
     while M > 0:
         # simulate tournament
         winner = simulate_tournament(teams)
