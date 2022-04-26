@@ -1,5 +1,5 @@
 import csv
-from sys import argv
+from sys import argv, exit
 
 
 def main():
@@ -57,6 +57,9 @@ def main():
 
 
 def get_usage(arg):
+    """Checks input arguments"""
+    
+    # check for 3 arguments
     if len(arg) == 3:
         return True
     return False
