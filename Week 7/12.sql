@@ -1,12 +1,18 @@
-/*List titles of five highest ratest movies with Chadwick Boseman*/
+/*List titles of movies with Johnny Depp and Helena Bonham Carter*/
+
 SELECT movies.title
 FROM movies
+
 JOIN stars
 ON movies.id = stars.movie_id
 JOIN people
 ON stars.person_id = people.id
-JOIN ratings
-ON movies.id = ratings.movie_id
-WHERE people.name = "Chadwick Boseman"
-ORDER BY ratings.rating DESC
-LIMIT 5;
+
+WHERE people.name = "Johnny Depp"
+AND movies.id IN
+    (SELECT stars.movie_id
+    FROM stars
+    WHERE stars.person_id =
+        (SELECT people.id
+        FROM people
+        WHERE people.name = "Helena Bonham Carter"));
