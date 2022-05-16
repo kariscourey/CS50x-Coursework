@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html lang = "en">
+    <head>
+        <title>hello</title>
+    </head>
+    <body>
+        <form>
+            <input autocomplete="off" autofocus id="name" placeholder="Name" type="text">
+            <input type="submit">
+        </form>
+        <script>
+
+            // function greet()
+            // {
+            //     let name = document.querySelector('#name').value;
+            //     alert('hello, ' + name);
+            // }
+
+            // document.querySelector('form').addEventListener('submit', greet);
+
+            document.querySelector('form').addEventListener('submit', function() {
+                let name = document.querySelector('#name').value;
+                alert('hello, ' + name);
+                e.preventDefault()
+            });
+
+        </script>
+    </body>
+</html>
