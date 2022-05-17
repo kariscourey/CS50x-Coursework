@@ -1,0 +1,27 @@
+a {
+    color: #a55f0d;
+    text-decoration: none;
+}
+
+a:hover, a:active + .hide {
+    color: #fcc45b;
+}
+
+body {
+    background-attachment: fixed;
+    background-color: #241e20;
+    background-image: url('pexels-rahul-716398.jpg');
+    background-position: 70% center;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+
+.hello {
+    color: #a55f0d;
+    font-size: 20px;
+    right: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
