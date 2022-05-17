@@ -1,0 +1,31 @@
+a {
+    color: #a55f0d;
+    text-decoration: none;
+}
+
+a:hover, a:active + .hide {
+    color: #241e20;
+}
+
+body {
+    background-attachment: fixed;
+    background-color: #241e20;
+    background-position: 70% center;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+
+.hello {
+    color: #a55f0d;
+    font-size: 60px;
+    right: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#lightbulb {
+    height: auto;
+    width: 200px;
+    top: -20%;
+}
