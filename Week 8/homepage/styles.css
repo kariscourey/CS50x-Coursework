@@ -1,10 +1,5 @@
-a {
-    color: #a55f0d;
-    text-decoration: none;
-}
-
-a:hover, a:active + .hide {
-    color: #241e20;
+#better {
+    display: none;
 }
 
 body {
@@ -15,17 +10,34 @@ body {
     background-size: auto 100%;
   }
 
-.hello {
+#hello {
     color: #a55f0d;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 60px;
-    right: 50%;
+    right: 28%;
     position: absolute;
+    text-decoration: none;
     top: 50%;
     transform: translate(-50%,-50%);
+}
+
+#hello:hover, #hello:active + .hide {
+    color: #ffaf37;
 }
 
 #lightbulb {
     height: auto;
     width: 200px;
-    top: -20%;
+    top: 0px;
+}
+
+.thought {
+    color: #523c25;
+}
+
+#welcome {
+    color: #a55f0d;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 20px;
+    text-align: left;
 }
