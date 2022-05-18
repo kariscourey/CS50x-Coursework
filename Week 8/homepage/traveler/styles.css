@@ -1,0 +1,46 @@
+#better {
+    display: none;
+}
+
+body {
+    background-attachment: fixed;
+    background-color: #241e20;
+    background-position: 70% center;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+
+#hello {
+    color: #a55f0d;
+    /* display: block; */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 60px;
+    right: 28%;
+    position: absolute;
+    text-decoration: none;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#hello:hover, #hello:active + .hide {
+    color: #ffaf37;
+    /* display: block; */
+}
+
+#lightbulb {
+    display: none;
+    height: auto;
+    width: 200px;
+    top: 0px;
+}
+
+.thought {
+    color: #523c25;
+}
+
+#welcome {
+    color: #a55f0d;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 20px;
+    text-align: left;
+}
