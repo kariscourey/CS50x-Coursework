@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    $('#lightbulb').hover( 
-        function(){$(this).show();},
-        function(){$(this).hide();}
-        );
+    $('#hello').on('hover active hide',
+        function() {
+            $('#lightbulb').show();
+    })
 });
