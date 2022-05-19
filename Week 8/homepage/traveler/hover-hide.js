@@ -1,6 +1,5 @@
-// $(document).ready(function() {
-//     $('#hello').hover(
-//         function() {
-//             $('#lightbulb').show();
-//     })
-// });
+$(document).ready(function() {
+    $('#hello').hover(function() {
+        $('#lightbulb').show();
+    });
+});
