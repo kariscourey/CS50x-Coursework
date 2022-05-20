@@ -4,6 +4,7 @@ a {
 }
 
 a:hover {
+    color: #ffaf37;
     text-decoration: underline;
 }
 
@@ -19,9 +20,16 @@ body {
     color: #241e20;
 }
 
+#fishy {
+    border: thick double #523c25;
+    display: block;
+    margin: 10% auto;
+    padding: 20px;
+}
+
 #footer {
     bottom: 4%;
-    left: 75%;
+    left: 85%;
     font-family: 'Courier New', Courier, monospace;
     position: fixed;
     width: 100%;
@@ -46,6 +54,7 @@ body {
 
 #lightbulb {
     display: none;
+    float: right;
     height: auto;
     width: 200px;
     top: 0px;

@@ -1,6 +1,6 @@
 $(document).ready(function() 
 {
-    $('#hello').hover(function() 
+    $('#hello').hover(function()
     {
         $('#lightbulb').show();
     });
