@@ -1,14 +1,28 @@
-$(document).ready(function() {
-    $('.home').click(function() {
+$(document).ready(function() 
+{
+    $('.home').click(function() 
+    {
         window.location.href='home.html';
     });
-    $('.about').click(function() {
+
+    $('.about').click(function() 
+    {
         window.location.href='about.html';
     });
-    $('.github').click(function() {
+
+    $('.github').click(function() 
+    {
         window.location.href='github.html';
     });
-    $('.linkedin').click(function() {
+
+    $('.linkedin').click(function() 
+    {
         window.location.href='linkedin.html';
     });
+
+    $('.blub').click(function()
+    {
+        window.location.href='blub.html';
+    });
+
 });
