@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <h1>Register</h1>
+    <form action="/register" method="post">
+        <input autocomplete="off" autofocus name="name" placeholder="Name" type="text">
+        
+        <!-- radio -->
+        {% for instrument in instruments %}
+            <input name="instrument" type="radio" value="{{ instrument }}">{{ instrument }}
+        {% endfor %}
+
+        <!-- checkbox -->
+        <!-- {% for instrument in instruments %}
+            <input name="instrument" type="checkbox" value="{{ instrument }}">{{ instrument }}
+        {% endfor %} -->
+        
+        <!-- select -->
+        <!-- <select name="select_instrument">
+            <option disable selected>Instrument</option>
+
+            {% for instrument in instruments %}
+                <option>{{ instrument }}</option>
+            {% endfor %} -->
+            <!-- <option>Trumpet</option>
+            <option>Ukulele</option>
+            <option>Piano</option> -->
+        <!-- </select> -->
+        <input type="submit" value="Register">
+    </form>
+
+{% endblock %}
