@@ -117,7 +117,57 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-    return apology("TODO")
+
+     # user reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # initialize variables
+        un = request.form.get("username")
+        pw = request.form.get("password")
+        confirm = request.form.get("confirmation")
+
+        # initialize apol_statement
+        apol_statement = ""
+
+        # query db for username
+        registered_uns = db.execute("SELECT username FROM users")
+
+        # ensure username was submitted
+        if not un:
+            apol_statement += "must provide username! "
+
+        # ensure username not in db
+        elif un in registered_uns:
+            apol_statement += "username already registered! "
+
+        # ensure password was submitted
+        elif not pw:
+            apol_statement += "must provide password! "
+
+        # ensure passwords match
+        elif not confirm:
+            apol_statement += "passwords don't match! "
+
+        # return apology if not ""
+        if apol_statement != "":
+            return apology(apol_statement, 403)
+
+        else:
+            # hash password
+            hashed_pw = generate_password_hash(pw)
+
+            # initialize params
+            params = (un, hashed_pw)
+
+            # insert into users
+            db.execute("INSERT INTO users(username,hash) VALUES (?)", params)
+
+            # redirect user to home page
+            return redirect("/")
+
+    # user reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("register.html")
 
 
 @app.route("/sell", methods=["GET", "POST"])
