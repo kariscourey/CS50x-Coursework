@@ -111,7 +111,21 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
+    # user reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # initialize sym
+        symbol = request.form.get("symbol")
+
+        # call lookup on sym
+        quote_price = lookup(symbol)
+
+        # redirect user to quoted
+        return redirect("/quoted", symbol=symbol, quote_price=quote_price)
+
+    # user reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -126,31 +140,48 @@ def register():
         pw = request.form.get("password")
         confirm = request.form.get("confirmation")
 
-        # initialize apol_statement
-        apol_statement = ""
+        # # initialize apol_statement
+        # apol_statement = ""
 
-        # query db for username
-        registered_uns = db.execute("SELECT username FROM users")
+        # query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = ?", un)
 
-        # ensure username was submitted
+         # ensure username was submitted
         if not un:
-            apol_statement += "must provide username! "
+            # apol_statement += "must provide username! "
+            return apology("must provide username", 403)
 
-        # ensure username not in db
-        elif un in registered_uns:
-            apol_statement += "username already registered! "
+        # ensure username exists and password is correct
+        elif len(rows) != 0:
+            return apology("username already registered", 403)
+
+
+        # # query db for username
+        # registered_uns = db.execute("SELECT username FROM users")
+
+        # # ensure username not in db
+        # elif un in registered_uns:
+        #     # apol_statement += "username already registered! "
+        #     print(registered_uns)
+        #     return apology("username already registered", 403)
 
         # ensure password was submitted
         elif not pw:
-            apol_statement += "must provide password! "
+            # apol_statement += "must provide password! "
+            return apology("must provide password", 403)
+
+        # ensure confirm entered
+        elif not confirm:
+            return apology("must confirm password", 403)
 
         # ensure passwords match
-        elif not confirm:
-            apol_statement += "passwords don't match! "
+        elif confirm != pw:
+            # apol_statement += "passwords don't match! "
+            return apology("passwords don't match", 403)
 
-        # return apology if not ""
-        if apol_statement != "":
-            return apology(apol_statement, 403)
+        # # return apology if apol_statement not null
+        # if apol_statement == "":
+        #     return apology(apol_statement, 403)
 
         else:
             # hash password
