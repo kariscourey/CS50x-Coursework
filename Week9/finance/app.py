@@ -118,10 +118,10 @@ def quote():
         symbol = request.form.get("symbol")
 
         # call lookup on sym
-        quote_price = lookup(symbol)
+        price = lookup(symbol)
 
         # redirect user to quoted
-        return redirect("/quoted", symbol=symbol, quote_price=quote_price)
+        return redirect("/quoted", symbol=symbol, price=price)
 
     # user reached route via GET (as by clicking a link or via redirect)
     else:
