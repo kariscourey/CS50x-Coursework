@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Bought
+{% endblock %}
+
+{% block main %}
+    <form action="/bought" method="post">
+        <div class="mb-3">
+            Success! {{ shares }} shares purchased of {{ symbol }} at ${{ price }}/share.
+            <p>
+                Total spent: ${{ total }}.
+            </p>
+        </div>
+    </form>
+{% endblock %}
