@@ -50,7 +50,63 @@ def index():
 @login_required
 def buy():
     """Buy shares of stock"""
-    return apology("TODO")
+    # user reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # initialize variable
+        symbol = request.form.get("symbol")
+
+        # call lookup on sym
+        price = lookup(symbol)["price"]
+
+        # initialize variable
+        shares = request.form.get("shares")
+
+        # ensure symbol was submitted
+        if not symbol:
+            return apology("must provide symbol", 403)
+
+        # ensure symbol is valid
+        elif not quote:
+            return apology("symbol invalid", 403)
+
+        try:
+            # typecast variable
+            shares = int(shares)
+
+        except (ValueError):
+            # ensure shares submitted
+            if shares == "":
+                return apology("must provide shares", 403)
+            # ensure share valid
+            else:
+                return apology("shares quantity invalid", 403)
+
+        # initialize variable
+        total = shares * price
+
+        # query db
+        cash = db.execute("SELECT cash FROM users WHERE username = ?", request.form.get("username"))
+
+        # intialize variable
+        remainder = cash - total
+
+        # calculate remainder
+        if remainder < 0:
+            return apology("invalid cash", 403)
+
+        else:
+            # add table with purchase
+
+            # update db with remainder
+            # db.execute("SELECT cash FROM users WHERE username = ?", request.form.get("username"))
+
+            # render template
+            return render_template("bought.html", symbol=symbol, price=price, shares=shares, total=total)
+
+    # user reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("buy.html")
 
 
 @app.route("/history")
@@ -118,10 +174,16 @@ def quote():
         symbol = request.form.get("symbol")
 
         # call lookup on sym
-        price = lookup(symbol)
+        price = lookup(symbol)["price"]
 
-        # redirect user to quoted
-        return redirect("/quoted", symbol=symbol, price=price)
+        if (quote is None):
+            # render template ... why isn't this working?
+            return render_template("quoted.html", symbol=symbol, price="INVALID")
+
+        else:
+            # render template, invalid
+            return render_template("quoted.html", symbol=symbol, price=price)
+
 
     # user reached route via GET (as by clicking a link or via redirect)
     else:
