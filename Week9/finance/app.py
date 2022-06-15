@@ -43,6 +43,7 @@ def after_request(response):
 @login_required
 def index():
     """Show portfolio of stocks"""
+    # TODO
     return apology("TODO")
 
 
@@ -113,6 +114,7 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
+    # TODO
     return apology("TODO")
 
 
@@ -267,4 +269,5 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
+    # TODO
     return apology("TODO")
