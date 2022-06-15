@@ -8,10 +8,12 @@ INSTRUMENTS = [
     "Piano"
 ]
 
+# route at index with index function
 @app.route("/")
 def index():
     return render_template("index.html", instruments=INSTRUMENTS)
 
+# route at greet with greet function
 @app.route("/greet", methods=["POST"])
 def greet():
     # validate submit
