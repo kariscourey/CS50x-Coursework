@@ -43,7 +43,6 @@ def after_request(response):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    # TODO
     return apology("TODO")
 
 
@@ -57,8 +56,13 @@ def buy():
         # initialize variable
         symbol = request.form.get("symbol")
 
-        # call lookup on sym
-        price = lookup(symbol)["price"]
+        try:
+            # call lookup on sym
+            price = lookup(symbol)["price"]
+
+        except (TypeError):
+            # ensure symbol is valid
+            return apology("symbol invalid", 403)
 
         # initialize variable
         shares = request.form.get("shares")
@@ -66,10 +70,6 @@ def buy():
         # ensure symbol was submitted
         if not symbol:
             return apology("must provide symbol", 403)
-
-        # ensure symbol is valid
-        elif not quote:
-            return apology("symbol invalid", 403)
 
         try:
             # typecast variable
@@ -86,8 +86,8 @@ def buy():
         # initialize variable
         total = shares * price
 
-        # query db
-        cash = db.execute("SELECT cash FROM users WHERE username = ?", request.form.get("username"))
+        # query db based on logged in user
+        cash = db.execute("SELECT cash FROM users WHERE username = ?", session["user_id"][0])
 
         # intialize variable
         remainder = cash - total
@@ -114,7 +114,6 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    # TODO
     return apology("TODO")
 
 
@@ -269,5 +268,4 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    # TODO
     return apology("TODO")
