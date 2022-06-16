@@ -7,10 +7,17 @@
 {% block main %}
     <form action="/bought" method="post">
         <div class="mb-3">
-            Success! {{ shares }} shares purchased of {{ symbol }} at ${{ price }}/share.
+            Success! {{ shares }} share(s) purchased of {{ symbol }} at ${{ price }}/share.
             <p>
                 Total spent: ${{ total }}.
             </p>
+            <p>
+                Remaining funds: ${{ remainder }}.
+            </p>
+            <p>
+                Purchase <a href="/buy">more.</a>
+            </p>
+
         </div>
     </form>
 {% endblock %}
