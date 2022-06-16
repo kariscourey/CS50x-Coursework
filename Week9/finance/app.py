@@ -51,11 +51,14 @@ def index():
     # get symbol, shares
     summary = (db.execute("SELECT symbol, shares FROM purchases WHERE user_id = ? GROUP BY symbol", user_id))
 
-    # call lookup on sym
-    price = lookup(symbol)["price"]
+    # lookup price and calculate total in list
+    for i in summary:
 
-    # initialize variable
-    total = shares * price
+        # call lookup on sym
+        price = lookup(symbol)["price"]
+
+    # # initialize variable
+    # total = shares * price
 
     # print table
     return render_template("index.html", summary=summary)
