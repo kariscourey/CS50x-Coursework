@@ -1,6 +1,7 @@
 import os
 
 from cs50 import SQL
+from datetime import datetime
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
@@ -43,18 +44,43 @@ def after_request(response):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return apology("TODO")
 
+    #initialize variables
+    user_id = session["user_id"]
+
+    # get symbol, shares
+    summary = (db.execute("SELECT symbol, shares FROM purchases WHERE user_id = ? GROUP BY symbol", user_id))
+
+    # call lookup on sym
+    price = lookup(symbol)["price"]
+
+    # initialize variable
+    total = shares * price
+
+    # print table
+    return render_template("index.html", summary=summary)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock"""
+
     # user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
+        #initialize variables
+        user_id = session["user_id"]
+        type = "buy"
+
         # initialize variable
-        symbol = request.form.get("symbol")
+        symbol = request.form.get("symbol").upper()
+
+        # initialize variable
+        shares = request.form.get("shares")
+
+        # ensure symbol was submitted
+        if not symbol:
+            return apology("must provide symbol", 403)
 
         try:
             # call lookup on sym
@@ -63,13 +89,6 @@ def buy():
         except (TypeError):
             # ensure symbol is valid
             return apology("symbol invalid", 403)
-
-        # initialize variable
-        shares = request.form.get("shares")
-
-        # ensure symbol was submitted
-        if not symbol:
-            return apology("must provide symbol", 403)
 
         try:
             # typecast variable
@@ -81,13 +100,13 @@ def buy():
                 return apology("must provide shares", 403)
             # ensure share valid
             else:
-                return apology("shares quantity invalid", 403)
+                return apology("shares invalid", 403)
 
         # initialize variable
         total = shares * price
 
         # query db based on logged in user
-        cash = db.execute("SELECT cash FROM users WHERE username = ?", session["user_id"][0])
+        cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
 
         # intialize variable
         remainder = cash - total
@@ -97,13 +116,15 @@ def buy():
             return apology("invalid cash", 403)
 
         else:
-            # add table with purchase
 
-            # update db with remainder
-            # db.execute("SELECT cash FROM users WHERE username = ?", request.form.get("username"))
+             # update users table
+            db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
+
+            # update purchases table
+            db.execute("INSERT INTO purchases (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
 
             # render template
-            return render_template("bought.html", symbol=symbol, price=price, shares=shares, total=total)
+            return render_template("bought.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
 
     # user reached route via GET (as by clicking a link or via redirect)
     else:
