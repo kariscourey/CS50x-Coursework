@@ -54,7 +54,10 @@ def index():
     # lookup price and calculate total in list
     for i in summary:
 
-        # call lookup on sym
+        # define symbol
+        symbol = i["symbol"]
+
+        # call lookup on symbol
         price = lookup(symbol)["price"]
 
     # # initialize variable
