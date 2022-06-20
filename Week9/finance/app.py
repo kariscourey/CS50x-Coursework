@@ -143,7 +143,7 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    # TODO
+    # TODO ... set up new html file(s)
     return apology("TODO")
 
 
