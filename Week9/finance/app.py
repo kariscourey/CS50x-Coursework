@@ -45,6 +45,8 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
 
+    # still working on
+
     #initialize variables
     user_id = session["user_id"]
 
