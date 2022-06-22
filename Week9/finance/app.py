@@ -51,20 +51,32 @@ def index():
     # get symbol, shares
     summary = (db.execute("SELECT symbol, shares FROM purchases WHERE user_id = ? GROUP BY symbol", user_id))
 
+    # get cash
+    cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
+
     # lookup price and calculate total in list
     for i in summary:
 
         # define symbol
         symbol = i["symbol"]
 
+        # define shares
+        shares = i["shares"]
+
         # call lookup on symbol
         price = lookup(symbol)["price"]
 
-    # # initialize variable
-    # total = shares * price
+        # define total
+        total = shares * price
+
+        # add kv pair
+        i["price"] = price
+
+        # add kv pair
+        i["total"] = total
 
     # print table
-    return render_template("index.html", summary=summary)
+    return render_template("index.html", summary=summary, cash=cash)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
