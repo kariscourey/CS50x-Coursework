@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+    <div class="mb-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    {% for i in summary[0] %}
+                        <th>{{ i.upper() }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for i in summary[0].values() %}
+                        <td>{{ i }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><b>CASH</b></td>
+                    <td>{{ cash }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><b>TOTAL</b></td>
+                    <td>{{ cash }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
