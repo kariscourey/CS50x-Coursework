@@ -15,11 +15,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    {% for i in summary[0].values() %}
-                        <td>{{ i }}</td>
+                    {% for i in summary %}
+                        <tr>
+                        {% for j in i %}
+                            <td>{{ i[j] }}</td>
+                        {% endfor %}
+                        </tr>
                     {% endfor %}
-                </tr>
                 <tr>
                     <td></td>
                     <td></td>
@@ -29,8 +31,8 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td><b>TOTAL</b></td>
-                    <td>{{ cash }}</td>
+                    <td><b>GRAND TOTAL</b></td>
+                    <td>{{ grand_total }}</td>
                 </tr>
             </tbody>
         </table>
