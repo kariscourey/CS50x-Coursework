@@ -30,6 +30,7 @@ db = SQL("sqlite:///finance.db")
 if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
 
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -44,10 +45,9 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
 
-    # still working on
-
     #initialize variables
     user_id = session["user_id"]
+    total_total = 0
 
     # get symbol, shares
     summary = (db.execute("SELECT symbol, shares FROM purchases WHERE user_id = ? GROUP BY symbol", user_id))
@@ -71,13 +71,16 @@ def index():
         total = shares * price
 
         # add kv pair
-        i["price"] = price
+        i["price"] = "${:,.2f}".format(price)
 
         # add kv pair
-        i["total"] = total
+        i["total"] = "${:,.2f}".format(total)
+
+        # increase total_total
+        total_total += total
 
     # print table
-    return render_template("index.html", summary=summary, cash=cash)
+    return render_template("index.html", summary=summary, cash="${:,.2f}".format(cash), grand_total="${:,.2f}".format(total_total + cash))
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -154,7 +157,6 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    # TODO ... set up new html file(s)
     return apology("TODO")
 
 
