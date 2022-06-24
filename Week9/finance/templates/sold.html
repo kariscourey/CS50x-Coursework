@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sold
+{% endblock %}
+
+{% block main %}
+    <form action="/sold" method="post">
+        <div class="mb-3">
+            Success! {{ shares }} share(s) sold of {{ symbol }} at ${{ price }}/share.
+            <p>
+                Total sold: ${{ total }}.
+            </p>
+            <p>
+                Remaining funds: ${{ remainder }}.
+            </p>
+            <p>
+                Sell <a href="/sell">more.</a>
+            </p>
+
+        </div>
+    </form>
+{% endblock %}
