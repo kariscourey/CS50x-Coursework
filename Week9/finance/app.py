@@ -50,6 +50,7 @@ def index():
     total_total = 0
 
     # get symbol, shares
+    # TODO get sum of shares for a given symbol
     summary = (db.execute("SELECT symbol, shares FROM transactions WHERE user_id = ? GROUP BY symbol", user_id))
 
     # get cash
@@ -358,6 +359,7 @@ def sell():
         remainder = cash + total
 
         # ensure stocks are on hand #TODO
+        # if SELECT
         if remainder < 0:
             return apology("invalid transaction", 403)
 
