@@ -50,7 +50,7 @@ def index():
     total_total = 0
 
     # get symbol, shares
-    summary = (db.execute("SELECT symbol, shares FROM purchases WHERE user_id = ? GROUP BY symbol", user_id))
+    summary = (db.execute("SELECT symbol, shares FROM transactions WHERE user_id = ? GROUP BY symbol", user_id))
 
     # get cash
     cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
@@ -142,8 +142,8 @@ def buy():
              # update users table
             db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
 
-            # update purchases table
-            db.execute("INSERT INTO purchases (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
+            # update transactions table
+            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
 
             # render template
             return render_template("bought.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
@@ -311,4 +311,67 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+    # user reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        #initialize variables
+        user_id = session["user_id"]
+        type = "sell"
+
+        # initialize variable
+        symbol = request.form.get("symbol").upper()
+
+        # initialize variable
+        shares = request.form.get("shares")
+
+        # ensure symbol was submitted
+        if not symbol:
+            return apology("must provide symbol", 403)
+
+        try:
+            # call lookup on sym
+            price = lookup(symbol)["price"]
+
+        except (TypeError):
+            # ensure symbol is valid
+            return apology("symbol invalid", 403)
+
+        try:
+            # typecast variable
+            shares = int(shares)
+
+        except (ValueError):
+            # ensure shares submitted
+            if shares == "":
+                return apology("must provide shares", 403)
+            # ensure share valid
+            else:
+                return apology("shares invalid", 403)
+
+        # initialize variable
+        total = shares * price
+
+        # query db based on logged in user
+        cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
+
+        # intialize variable
+        remainder = cash + total
+
+        # ensure stocks are on hand #TODO
+        if remainder < 0:
+            return apology("invalid transaction", 403)
+
+        else:
+
+             # update users table
+            db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
+
+            # update transactions table
+            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
+
+            # render template
+            return render_template("sold.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
+
+    # user reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("sell.html")
