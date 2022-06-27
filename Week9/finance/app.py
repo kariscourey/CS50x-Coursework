@@ -50,8 +50,7 @@ def index():
     total_total = 0
 
     # get symbol, shares
-    # TODO get sum of shares for a given symbol
-    summary = (db.execute("SELECT symbol, shares FROM transactions WHERE user_id = ? GROUP BY symbol", user_id))
+    summary = (db.execute("SELECT symbol, SUM(shares) FROM transactions WHERE user_id = ? GROUP BY symbol", user_id))
 
     # get cash
     cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
@@ -63,7 +62,7 @@ def index():
         symbol = i["symbol"]
 
         # define shares
-        shares = i["shares"]
+        shares = i["SUM(shares)"]
 
         # call lookup on symbol
         price = lookup(symbol)["price"]
@@ -96,7 +95,7 @@ def buy():
         type = "buy"
 
         # initialize variable
-        symbol = request.form.get("symbol").upper()
+        symbol = request.form.get("symbol").upper().strip()
 
         # initialize variable
         shares = request.form.get("shares")
@@ -159,7 +158,6 @@ def buy():
 def history():
     """Show history of transactions"""
     return apology("TODO")
-    # TODO
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -217,7 +215,7 @@ def quote():
     if request.method == "POST":
 
         # initialize sym
-        symbol = request.form.get("symbol")
+        symbol = request.form.get("symbol").upper().strip()
 
         # call lookup on sym
         price = lookup(symbol)["price"]
@@ -321,7 +319,7 @@ def sell():
         type = "sell"
 
         # initialize variable
-        symbol = request.form.get("symbol").upper()
+        symbol = request.form.get("symbol").upper().strip()
 
         # initialize variable
         shares = request.form.get("shares")
@@ -350,6 +348,22 @@ def sell():
             else:
                 return apology("shares invalid", 403)
 
+        # query database for symbol
+        bought = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND type = ?", user_id, symbol, "buy")[0]["SUM(shares)"]
+        sold = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND type = ?", user_id, symbol, type)[0]["SUM(shares)"]
+
+        # adjust bought
+        if bought is None:
+            bought = 0
+
+        # adjust sold
+        if sold is None:
+            sold = 0
+
+        # check for symbol on hand
+        if (bought - sold) <= 0:
+            return apology("invalid transaction", 403)
+
         # initialize variable
         total = shares * price
 
@@ -359,21 +373,14 @@ def sell():
         # intialize variable
         remainder = cash + total
 
-        # ensure stocks are on hand #TODO
-        # if SELECT
-        if remainder < 0:
-            return apology("invalid transaction", 403)
+        # update users table
+        db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
 
-        else:
+        # update transactions table
+        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
 
-             # update users table
-            db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
-
-            # update transactions table
-            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
-
-            # render template
-            return render_template("sold.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
+        # render template
+        return render_template("sold.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
 
     # user reached route via GET (as by clicking a link or via redirect)
     else:
