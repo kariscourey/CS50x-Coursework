@@ -159,6 +159,7 @@ def buy():
 def history():
     """Show history of transactions"""
     return apology("TODO")
+    # TODO
 
 
 @app.route("/login", methods=["GET", "POST"])
