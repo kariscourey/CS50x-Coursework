@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <div class="mb-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    {% for i in summary[0] %}
+                        <th>{{ i.upper() }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                    {% for i in summary %}
+                        <tr>
+                        {% for j in i %}
+                            <td>{{ i[j] }}</td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
