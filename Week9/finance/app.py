@@ -92,7 +92,6 @@ def buy():
 
         #initialize variables
         user_id = session["user_id"]
-        type = "buy"
 
         # initialize variable
         symbol = request.form.get("symbol").upper().strip()
@@ -114,7 +113,7 @@ def buy():
 
         try:
             # typecast variable
-            shares = int(shares)
+            shares = -1 * int(shares)
 
         except (ValueError):
             # ensure shares submitted
@@ -131,7 +130,7 @@ def buy():
         cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
 
         # intialize variable
-        remainder = cash - total
+        remainder = cash + total
 
         # calculate remainder
         if remainder < 0:
@@ -143,7 +142,7 @@ def buy():
             db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
 
             # update transactions table
-            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
+            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now())
 
             # render template
             return render_template("bought.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
@@ -157,7 +156,37 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    return apology("TODO")
+
+    #initialize variables
+    user_id = session["user_id"]
+
+    # get transaction info
+    summary = (db.execute("SELECT symbol, shares, price, time FROM transactions WHERE user_id = ?", user_id))
+
+    # lookup price and calculate total in list
+    for i in summary:
+
+        # define symbol
+        symbol = i["symbol"]
+
+        # define shares
+        shares = i["shares"]
+
+        # call lookup on symbol
+        price = lookup(symbol)["price"]
+
+        # define total
+        total = shares * price
+
+        # add kv pair
+        i["price"] = "${:,.2f}".format(price)
+
+        # add kv pair
+        i["total"] = "${:,.2f}".format(total)
+
+    # print table
+    return render_template("history.html", summary=summary)
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -316,7 +345,6 @@ def sell():
 
         #initialize variables
         user_id = session["user_id"]
-        type = "sell"
 
         # initialize variable
         symbol = request.form.get("symbol").upper().strip()
@@ -349,8 +377,8 @@ def sell():
                 return apology("shares invalid", 403)
 
         # query database for symbol
-        bought = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND type = ?", user_id, symbol, "buy")[0]["SUM(shares)"]
-        sold = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND type = ?", user_id, symbol, type)[0]["SUM(shares)"]
+        bought = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND shares < 0", user_id, symbol)[0]["SUM(shares)"]
+        sold = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND shares > 0", user_id, symbol)[0]["SUM(shares)"]
 
         # adjust bought
         if bought is None:
@@ -371,13 +399,13 @@ def sell():
         cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
 
         # intialize variable
-        remainder = cash + total
+        remainder = cash - total
 
         # update users table
         db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
 
         # update transactions table
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time, type) VALUES (?, ?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now(), type)
+        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now())
 
         # render template
         return render_template("sold.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
