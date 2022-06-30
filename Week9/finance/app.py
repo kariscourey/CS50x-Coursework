@@ -82,6 +82,7 @@ def index():
     # print table
     return render_template("index.html", summary=summary, cash="${:,.2f}".format(cash), grand_total="${:,.2f}".format(total_total + cash))
 
+
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
@@ -186,7 +187,6 @@ def history():
 
     # print table
     return render_template("history.html", summary=summary)
-
 
 
 @app.route("/login", methods=["GET", "POST"])
