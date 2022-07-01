@@ -156,6 +156,8 @@ def buy():
 @app.route("/history")
 @login_required
 def history():
+    # need to fix up!!
+
     """Show history of transactions"""
 
     #initialize variables
