@@ -258,7 +258,6 @@ def quote():
             # render template, invalid
             return render_template("quoted.html", symbol=symbol, price=price)
 
-
     # user reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("quote.html")
