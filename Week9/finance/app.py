@@ -30,6 +30,7 @@ db = SQL("sqlite:///finance.db")
 if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
 
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
