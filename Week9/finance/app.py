@@ -387,7 +387,7 @@ def sell():
 
         # adjust sold
         if sold is None:
-            sold = 0
+            sold = 0 
 
         # check for symbol on hand
         if (bought - sold) <= 0:
