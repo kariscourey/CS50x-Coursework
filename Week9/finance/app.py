@@ -30,6 +30,7 @@ db = SQL("sqlite:///finance.db")
 if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
 
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -57,6 +58,9 @@ def index():
     # lookup price and calculate total in list
     for i in summary:
 
+        # TODO
+        # if i["SUM(shares"] != 0: ... don't show it
+
         # define symbol
         symbol = i["symbol"]
 
@@ -80,7 +84,6 @@ def index():
 
     # print table
     return render_template("index.html", summary=summary, cash="${:,.2f}".format(cash), grand_total="${:,.2f}".format(total_total + cash))
-
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -113,7 +116,8 @@ def buy():
 
         try:
             # typecast variable
-            shares = -1 * int(shares)
+            shares = int(shares)
+
 
         except (ValueError):
             # ensure shares submitted
@@ -123,6 +127,10 @@ def buy():
             else:
                 return apology("shares invalid", 403)
 
+        # ensure positive shares
+        if shares < 0:
+            return apology("shares must be positive", 403)
+
         # initialize variable
         total = shares * price
 
@@ -130,7 +138,7 @@ def buy():
         cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
 
         # intialize variable
-        remainder = cash + total
+        remainder = cash - total
 
         # calculate remainder
         if remainder < 0:
@@ -138,7 +146,7 @@ def buy():
 
         else:
 
-             # update users table
+            # update users table
             db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
 
             # update transactions table
@@ -155,8 +163,6 @@ def buy():
 @app.route("/history")
 @login_required
 def history():
-    # need to fix up!!
-
     """Show history of transactions"""
 
     #initialize variables
@@ -180,14 +186,18 @@ def history():
         # define total
         total = shares * price
 
-        # add kv pair
+        # update kv pair
         i["price"] = "${:,.2f}".format(price)
 
         # add kv pair
-        i["total"] = "${:,.2f}".format(total)
+        if total < 0:
+            i[" transaction total"] = "${:,.2f}".format(abs(total))
+        else:
+            i["transaction total"] = "(${:,.2f})".format(total)
 
     # print table
     return render_template("history.html", summary=summary)
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -257,6 +267,7 @@ def quote():
         else:
             # render template, invalid
             return render_template("quoted.html", symbol=symbol, price=price)
+
 
     # user reached route via GET (as by clicking a link or via redirect)
     else:
@@ -343,7 +354,7 @@ def sell():
     # user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        #initialize variables
+        # initialize variables
         user_id = session["user_id"]
 
         # initialize variable
@@ -366,7 +377,7 @@ def sell():
 
         try:
             # typecast variable
-            shares = int(shares)
+            shares = -1 * int(shares)
 
         except (ValueError):
             # ensure shares submitted
@@ -377,19 +388,16 @@ def sell():
                 return apology("shares invalid", 403)
 
         # query database for symbol
-        bought = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND shares < 0", user_id, symbol)[0]["SUM(shares)"]
-        sold = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ? AND shares > 0", user_id, symbol)[0]["SUM(shares)"]
+        shares_inventory = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ?", user_id, symbol)[0]["SUM(shares)"]
 
-        # adjust bought
-        if bought is None:
-            bought = 0
+        try:
+            if shares_inventory <= 0 or shares_inventory + shares < 0:
+                return apology("invalid transaction", 403)
+        except (TypeError):
+                return apology("invalid transaction", 403)
 
-        # adjust sold
-        if sold is None:
-            sold = 0 
-
-        # check for symbol on hand
-        if (bought - sold) <= 0:
+        # ensure positive shares
+        if shares > 0:
             return apology("invalid transaction", 403)
 
         # initialize variable
@@ -399,7 +407,7 @@ def sell():
         cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
 
         # intialize variable
-        remainder = cash - total
+        remainder = cash + total
 
         # update users table
         db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
