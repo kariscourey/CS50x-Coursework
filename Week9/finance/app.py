@@ -1,4 +1,4 @@
-import os 
+import os
 
 from cs50 import SQL
 from datetime import datetime
@@ -50,7 +50,7 @@ def index():
     total_total = 0
 
     # get symbol, shares
-    summary = (db.execute("SELECT symbol, SUM(shares) FROM transactions WHERE user_id = ? GROUP BY symbol", user_id))
+    summary = (db.execute("SELECT symbol, SUM(shares) FROM transactions WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) <> 0", user_id))
 
     # get cash
     cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
@@ -58,14 +58,11 @@ def index():
     # lookup price and calculate total in list
     for i in summary:
 
-        # TODO
-        # if i["SUM(shares"] != 0: ... don't show it
+        # define shares
+        shares = i["SUM(shares)"]
 
         # define symbol
         symbol = i["symbol"]
-
-        # define shares
-        shares = i["SUM(shares)"]
 
         # call lookup on symbol
         price = lookup(symbol)["price"]
@@ -319,6 +316,18 @@ def register():
         # ensure confirm entered
         elif not confirm:
             return apology("must confirm password", 403)
+
+        # ensure pw formatting
+        elif len(pw) < 10:
+            return apology("password too short", 403)
+
+        # ensure pw contains number:
+        elif any(char.isdigit() for char in pw) == False:
+            return apology("password must contain number", 403)
+
+        # ensure pw contains special char:
+        elif any((char >= "!" and char <= "/") or (char >= ":" and char <= "@") or (char >= "[" and char <= "`") or (char >= "{" and char <= "~") for char in pw) == False:
+            return apology("password must contain special character", 403)
 
         # ensure passwords match
         elif confirm != pw:
