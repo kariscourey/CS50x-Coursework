@@ -444,4 +444,8 @@ def sell():
         for i in sym_query:
             symbols.append(i["symbol"])
 
+<<<<<<< HEAD
         return render_template("sell.html", symbols=symbols)
+=======
+        return render_template("sell.html", symbols=symbols)
+>>>>>>> 88ba7a74e0eae2df49b57fe4f9a14c3dbb9f50f6
