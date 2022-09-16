@@ -4,20 +4,20 @@
     Sold
 {% endblock %}
 
+
 {% block main %}
     <form action="/sold" method="post">
         <div class="mb-3">
-            Success! {{ -1 * shares }} share(s) sold of {{ symbol }} at {{ price | usd }}/share.
+            Success! {{ -1 * shares }} share(s) sold of {{ symbol }} at ${{ price }}/share.
             <p>
-                Total sold: {{ total | usd }}.
+                Total sold: ${{ -1 * total }}.
             </p>
             <p>
-                Remaining funds: {{ remainder | usd }}.
-            </p>
+                Remaining funds: ${{ remainder }}.
+            </p> 
             <p>
                 Sell <a href="/sell">more.</a>
-            </p>
-
+            </p> 
         </div>
     </form>
 {% endblock %}

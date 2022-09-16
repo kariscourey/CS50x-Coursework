@@ -1,4 +1,4 @@
-import os
+import os 
 
 from cs50 import SQL
 from datetime import datetime
@@ -45,12 +45,12 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
 
-    # initialize variables
+    #initialize variables
     user_id = session["user_id"]
     total_total = 0
 
     # get symbol, shares
-    summary = (db.execute("SELECT symbol, SUM(shares) FROM transactions WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) <> 0", user_id))
+    summary = (db.execute("SELECT symbol, SUM(shares) FROM transactions WHERE user_id = ? GROUP BY symbol", user_id))
 
     # get cash
     cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
@@ -58,11 +58,14 @@ def index():
     # lookup price and calculate total in list
     for i in summary:
 
-        # define shares
-        shares = i["SUM(shares)"]
+        # TODO
+        # if i["SUM(shares"] != 0: ... don't show it
 
         # define symbol
         symbol = i["symbol"]
+
+        # define shares
+        shares = i["SUM(shares)"]
 
         # call lookup on symbol
         price = lookup(symbol)["price"]
@@ -82,7 +85,6 @@ def index():
     # print table
     return render_template("index.html", summary=summary, cash="${:,.2f}".format(cash), grand_total="${:,.2f}".format(total_total + cash))
 
-
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
@@ -91,7 +93,7 @@ def buy():
     # user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        # initialize variables
+        #initialize variables
         user_id = session["user_id"]
 
         # initialize variable
@@ -102,7 +104,7 @@ def buy():
 
         # ensure symbol was submitted
         if not symbol:
-            return apology("must provide symbol", 400)
+            return apology("must provide symbol", 403)
 
         try:
             # call lookup on sym
@@ -110,23 +112,24 @@ def buy():
 
         except (TypeError):
             # ensure symbol is valid
-            return apology("symbol invalid", 400)
+            return apology("symbol invalid", 403)
 
         try:
             # typecast variable
             shares = int(shares)
 
+
         except (ValueError):
             # ensure shares submitted
             if shares == "":
-                return apology("must provide shares", 400)
+                return apology("must provide shares", 403)
             # ensure share valid
             else:
-                return apology("shares invalid", 400)
+                return apology("shares invalid", 403)
 
         # ensure positive shares
         if shares < 0:
-            return apology("shares must be positive", 400)
+            return apology("shares must be positive", 403)
 
         # initialize variable
         total = shares * price
@@ -147,8 +150,7 @@ def buy():
             db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
 
             # update transactions table
-            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)",
-                       user_id, symbol, shares, price, datetime.now())
+            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now())
 
             # render template
             return render_template("bought.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
@@ -163,7 +165,7 @@ def buy():
 def history():
     """Show history of transactions"""
 
-    # initialize variables
+    #initialize variables
     user_id = session["user_id"]
 
     # get transaction info
@@ -195,6 +197,7 @@ def history():
 
     # print table
     return render_template("history.html", summary=summary)
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -251,23 +254,20 @@ def quote():
     # user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        try:
-            # initialize sym
-            symbol = request.form.get("symbol").upper().strip()
+        # initialize sym
+        symbol = request.form.get("symbol").upper().strip()
 
-            # call lookup on sym
-            price = lookup(symbol)["price"]
+        # call lookup on sym
+        price = lookup(symbol)["price"]
 
-        except:
-            return apology("invalid symbol", 400)
-
-        # if (price is None):
-        #     # render template ... why isn't this working?
-        #     return render_template("quoted.html", symbol=symbol, price="INVALID")
+        if (quote is None):
+            # render template ... why isn't this working?
+            return render_template("quoted.html", symbol=symbol, price="INVALID")
 
         else:
             # render template, invalid
             return render_template("quoted.html", symbol=symbol, price=price)
+
 
     # user reached route via GET (as by clicking a link or via redirect)
     else:
@@ -278,7 +278,7 @@ def quote():
 def register():
     """Register user"""
 
-    # user reached route via POST (as by submitting a form via POST)
+     # user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
         # initialize variables
@@ -292,14 +292,15 @@ def register():
         # query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", un)
 
-        # ensure username was submitted
+         # ensure username was submitted
         if not un:
             # apol_statement += "must provide username! "
-            return apology("must provide username", 400)
+            return apology("must provide username", 403)
 
         # ensure username exists and password is correct
         elif len(rows) != 0:
-            return apology("username already registered", 400)
+            return apology("username already registered", 403)
+
 
         # # query db for username
         # registered_uns = db.execute("SELECT username FROM users")
@@ -313,28 +314,16 @@ def register():
         # ensure password was submitted
         elif not pw:
             # apol_statement += "must provide password! "
-            return apology("must provide password", 400)
+            return apology("must provide password", 403)
 
         # ensure confirm entered
         elif not confirm:
-            return apology("must confirm password", 400)
-
-        # # ensure pw formatting
-        # elif len(pw) < 10:
-        #     return apology("password too short", 400)
-
-        # # ensure pw contains number:
-        # elif any(char.isdigit() for char in pw) == False:
-        #     return apology("password must contain number", 400)
-
-        # # ensure pw contains special char:
-        # elif any((char >= "!" and char <= "/") or (char >= ":" and char <= "@") or (char >= "[" and char <= "`") or (char >= "{" and char <= "~") for char in pw) == False:
-        #     return apology("password must contain special character", 400)
+            return apology("must confirm password", 403)
 
         # ensure passwords match
         elif confirm != pw:
             # apol_statement += "passwords don't match! "
-            return apology("passwords don't match", 400)
+            return apology("passwords don't match", 403)
 
         # # return apology if apol_statement not null
         # if apol_statement == "":
@@ -376,7 +365,7 @@ def sell():
 
         # ensure symbol was submitted
         if not symbol:
-            return apology("must provide symbol", 400)
+            return apology("must provide symbol", 403)
 
         try:
             # call lookup on sym
@@ -384,7 +373,7 @@ def sell():
 
         except (TypeError):
             # ensure symbol is valid
-            return apology("symbol invalid", 400)
+            return apology("symbol invalid", 403)
 
         try:
             # typecast variable
@@ -393,27 +382,26 @@ def sell():
         except (ValueError):
             # ensure shares submitted
             if shares == "":
-                return apology("must provide shares", 400)
+                return apology("must provide shares", 403)
             # ensure share valid
             else:
-                return apology("shares invalid", 400)
+                return apology("shares invalid", 403)
 
         # query database for symbol
-        shares_inventory = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ?", user_id, symbol)[
-            0]["SUM(shares)"]
+        shares_inventory = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ?", user_id, symbol)[0]["SUM(shares)"]
 
         try:
             if shares_inventory <= 0 or shares_inventory + shares < 0:
-                return apology("invalid transaction", 400)
+                return apology("invalid transaction", 403)
         except (TypeError):
-            return apology("invalid transaction", 400)
+                return apology("invalid transaction", 403)
 
         # ensure positive shares
         if shares > 0:
-            return apology("invalid transaction", 400)
+            return apology("invalid transaction", 403)
 
         # initialize variable
-        total = -1 * shares * price
+        total = shares * price
 
         # query db based on logged in user
         cash = (db.execute("SELECT cash FROM users WHERE id = ?", user_id))[0]["cash"]
@@ -425,23 +413,11 @@ def sell():
         db.execute("UPDATE users SET cash = ? WHERE id = ?", remainder, user_id)
 
         # update transactions table
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)",
-                   user_id, symbol, shares, price, datetime.now())
+        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", user_id, symbol, shares, price, datetime.now())
 
         # render template
         return render_template("sold.html", symbol=symbol, price=price, shares=shares, remainder=remainder, total=total)
 
     # user reached route via GET (as by clicking a link or via redirect)
     else:
-
-        # initialize variables
-        user_id = session["user_id"]
-        symbols = []
-
-        # query database for symbols
-        sym_query = db.execute("SELECT symbol FROM transactions WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) > 0", user_id)
-
-        for i in sym_query:
-            symbols.append(i["symbol"])
-
-        return render_template("sell.html", symbols=symbols)
+        return render_template("sell.html")
