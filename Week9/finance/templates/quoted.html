@@ -7,7 +7,7 @@
 {% block main %}
     <form action="/quoted" method="post">
         <div class="mb-3">
-            {{ symbol }} = ${{ price }}
+            {{ symbol }} = {{ price | usd }}
         </div>
     </form>
 {% endblock %}
