@@ -7,7 +7,6 @@
 
 Hot Stocks - revolutionizing stocks to make them, like, totally cool.
 
-## Summary
 
 ## Video demo: <https://www.youtube.com/watch?v=aVcRNvSrzWg>
 ## Source code: <https://gitlab.com/igneous-rocks/hot-stocks/>
