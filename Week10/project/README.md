@@ -5,6 +5,7 @@
 - York Shaw
 - Karis Courey
 
+
 Hot Stocks - revolutionizing stocks to make them, like, totally cool.
 
 
